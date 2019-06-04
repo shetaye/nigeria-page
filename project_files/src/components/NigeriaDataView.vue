@@ -18,7 +18,10 @@
               </v-layout>
               <v-layout row align-center justify-space-between py-5>
                 <number :number="immigration" description="Immigration rate"/>
-                <number :number="emmigration" description="Emmigration rate"/>
+                <number :number="emmigration" description="Emigration rate"/>
+              </v-layout>
+              <v-layout column align-center justify-space-between py-5>
+                <numberBig :number="immigration_rate" description="Net migration rate (migrants / 1000) - "/>
               </v-layout>
 
               <v-layout row align-center justify-space-between>
@@ -64,7 +67,7 @@
               <v-layout row align-center justify-space-between py-5>
                 <span>
                   <numberBig :number="`$${ppp_capita_gdp}`" description="GDP per capita adjusted for PPP - 2017"/>
-                  <numberBig :number="`$${ppp_gdp}`" description="GDP adjusted for PPP - 2017"/>
+                  <numberBig :number="`$${ppp_gdp}`" description="GDP in trillions adjusted for PPP - 2017"/>
                 </span>
                 <pie-graph name="sector_gdp_share" :labels="sector_gdp_pie_labels" :data="sector_gdp_pie_data" description="Each sector's share of the GDP"/>
               </v-layout>
@@ -91,7 +94,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row align-center justify-space-between py-5>
-                <number :number="gini_index" description="Gini Index"/>
+                <number :number="gini_index" description="Gini Index (Lower is better)"/>
                 <number :number="gini_rating" description="Gini Index Rating"/>
               </v-layout>
               <v-layout column align-center justify-space-between pb-5 pt-2>
@@ -105,11 +108,11 @@
               </v-layout>
               <v-layout row align-center justify-space-between py-5>
                 <number :number="freedom_level" description="Level of Freedom"/>
-                <number :number="`${democracy_level}/10 (Hybrid Regime)`" description_top="" description="Democracy Level"/>
+                <number :number="`${democracy_level}/10 (Hybrid Regime)`" description_top="" description="Democracy Level (Lower is worse)"/>
               </v-layout>
               <v-layout row align-center justify-space-between py-5>
-                <number :number="political_rights" description="Political Rights"/>
-                <number :number="civil_liberties" description="Civil Liberties"/>
+                <number :number="`${political_rights}/7`" description="Political Rights (Lower is better)"/>
+                <number :number="`${civil_liberties}/7`" description="Civil Liberties (Lower is better)"/>
               </v-layout>
               <v-layout row align-center justify-space-between py-5>
                 <v-flex xs5>
@@ -118,7 +121,7 @@
                     max-height="500"/>
                   <div class="text-xs-center">{{photo_pol_divisions_desc}}</div>
                 </v-flex>
-                <number :number="`${transparency}`" description="Transparency Rating (Corruption)"/>
+                <number :number="`${transparency}/100`" description="Transparency Rating (Corruption, lower is worse)"/>
               </v-layout>
               <v-layout row align-center justify-space-between py-2>
                 <v-flex>
@@ -178,7 +181,7 @@
                 </v-flex>
               </v-layout>
               <v-layout column align-center justify-space-between py-5>
-                <numberBig :number="`${women_legislature}%`" description="of the legislature constists of women"/>
+                <numberBig :number="`${women_legislature}%`" description="of the legislature consists of women"/>
               </v-layout>
               <v-layout column align-center justify-space-between py-5>
                 <numberBig :number="women_suffrage" description="Year women gained suffrage."/>
@@ -217,6 +220,31 @@
                 <number :number="`${oil_export_ratio}%`" description_top="Oil makes up" description="of Nigerian exports."/>
                 <number :number="`${oil_refinery_ratio}%`" description_top="Nigeria has enough refineries to process" description="of the oil it makes"/>
               </v-layout>
+
+              <v-layout row align-center justify-space-between>
+                <v-flex>
+                  <div class="text-xs-center display-2">Lagos</div>
+                </v-flex>
+              </v-layout>
+
+
+              <v-layout row align-center justify-space-between>
+                <v-flex>
+                  <div class="text-xs-center display-2">Comparison</div>
+                </v-flex>
+              </v-layout>
+
+
+              <v-layout row align-center justify-space-between>
+                <v-flex>
+                  <div class="text-xs-center display-2">MLA Citations</div>
+                </v-flex>
+              </v-layout>
+              <v-layout column align-center justify-space-between>
+                <v-flex xs12>
+                  <div class="citation_embed"> <iframe src="https://docs.google.com/document/d/e/2PACX-1vTryoeNY2EYzDL8ZCin6t_jYMe8W6OPVOLNzGTeQuDkQRXBEyNXz9ZHFmRZ7HlTkCOMrzsw9LUCgU8x/pub?embedded=true"></iframe> </div>
+                </v-flex>
+              </v-layout>
             </v-container>
           </v-card-text>
         </v-card>
@@ -231,6 +259,8 @@ import NumberBig from '@/components/NumberBig'
 import PieGraph from '@/components/PieGraph'
 import BarGraph from '@/components/BarGraph'
 
+import Citations from '@/assets/citations.txt'
+
 export default {
   name: "NigeriaDataView",
   data() {
@@ -241,6 +271,7 @@ export default {
       population_growth: 2.54,
       immigration: 0,
       emmigration: 0,
+      immigration_rate: -0.2,
       age_pie_labels: ['0-14 Years', '15-24 Years', '25-54 Years', '55-64 Years', '65 Years and Older'],
       age_pie_data: [42.45, 19.81, 30.44, 4.04, 3.26],
       below_poverty_line: 70,
@@ -250,7 +281,7 @@ export default {
       hdi: 0.532,
       hdi_ranking: 157,
       ppp_capita_gdp: '5,933.3',
-      ppp_gdp: '1.121Trillion',
+      ppp_gdp: '1.121',
       sector_gdp_pie_labels: ['Primary', 'Secondary', 'Tertiary'],
       sector_gdp_pie_data: [21.1, 19.4, 59.5],
       sector_worker_pie_labels: ['Primary', 'Secondary', 'Tertiary'],
@@ -296,6 +327,7 @@ export default {
       photo_e_src: require('@/assets/aso_rock.jpg'),
       photo_f_desc: 'Supreme Court Complex, Abuja - https://discoverafricanews.com',
       photo_f_src: require('@/assets/supreme_court_complex.jpg'),
+      citation_string: Citations,
     }
   },
   components: {
@@ -311,5 +343,9 @@ export default {
 <style scoped>
 div {
   font-family: 'Oswald', sans-serif;
+}
+.citation_embed {
+  width: 100%;
+  height: 100%;
 }
 </style>
