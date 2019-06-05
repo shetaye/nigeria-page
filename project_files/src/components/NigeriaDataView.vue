@@ -16,12 +16,26 @@
                 <number :number="population_size" description="Population - 2018"/>
                 <number :number="`${population_growth}%`" description="Population growth - 2018"/>
               </v-layout>
+
               <v-layout row align-center justify-space-between py-5>
-                <number :number="immigration" description="Immigration rate"/>
-                <number :number="emmigration" description="Emigration rate"/>
+                <v-layout column>
+                  <div class="text-xs-center display-1">Top Immigration Countries</div>
+                  <div v-for="(immigration, index) in immigration_rates" :key="index" >
+                    <number :number="immigration[0]" :description="`${immigration[1]} Migrants`"/>
+                    <br>
+                  </div>
+                </v-layout>
+                <v-layout column>
+                  <div class="text-xs-center display-1">Top Emigration Countries</div>
+                  <div v-for="(emigration, index) in emigration_rates" :key="index">
+                    <number :number="emigration[0]" :description="`${emigration[1]} Migrants`"/>
+                    <br>
+                  </div>
+                </v-layout>
               </v-layout>
+
               <v-layout column align-center justify-space-between py-5>
-                <numberBig :number="immigration_rate" description="Net migration rate (migrants / 1000) - "/>
+                <numberBig :number="immigration_rate" description="Net migration rate (migrants / 1000)"/>
               </v-layout>
 
               <v-layout row align-center justify-space-between>
@@ -67,7 +81,7 @@
               <v-layout row align-center justify-space-between py-5>
                 <span>
                   <numberBig :number="`$${ppp_capita_gdp}`" description="GDP per capita adjusted for PPP - 2017"/>
-                  <numberBig :number="`$${ppp_gdp}`" description="GDP in trillions adjusted for PPP - 2017"/>
+                  <numberBig :number="`T$${ppp_gdp}`" description="GDP in trillions adjusted for PPP - 2017"/>
                 </span>
                 <pie-graph name="sector_gdp_share" :labels="sector_gdp_pie_labels" :data="sector_gdp_pie_data" description="Each sector's share of the GDP"/>
               </v-layout>
@@ -220,29 +234,47 @@
                 <number :number="`${oil_export_ratio}%`" description_top="Oil makes up" description="of Nigerian exports."/>
                 <number :number="`${oil_refinery_ratio}%`" description_top="Nigeria has enough refineries to process" description="of the oil it makes"/>
               </v-layout>
+              <v-layout column align-center justify-space-between pb-5 pt-0>
+                <v-flex>
+                  <p>{{data_string}}</p>
+                </v-flex>
+              </v-layout>
 
               <v-layout row align-center justify-space-between>
                 <v-flex>
                   <div class="text-xs-center display-2">Lagos</div>
                 </v-flex>
               </v-layout>
-
-
-              <v-layout row align-center justify-space-between>
+              <v-layout column align-center justify-space-between pb-5 pt-2>
                 <v-flex>
-                  <div class="text-xs-center display-2">Comparison</div>
+                  <p>{{lagos_string}}</p>
+                </v-flex>
+                <v-flex xs5>
+                  <v-img :src="photo_lagos_city_src"
+                    min-width="500"/>
+                  <div class="text-xs-center">{{photo_lagos_city_desc}}</div>
                 </v-flex>
               </v-layout>
 
+              <v-layout row align-center justify-space-between>
+                <v-flex>
+                  <div class="text-xs-center display-2">Comparison Paragraph</div>
+                </v-flex>
+              </v-layout>
+              <v-layout column align-center justify-space-between pb-5 pt-2>
+                <v-flex xs9>
+                  <p>{{comparison_string}}</p>
+                </v-flex>
+              </v-layout>
 
               <v-layout row align-center justify-space-between>
                 <v-flex>
                   <div class="text-xs-center display-2">MLA Citations</div>
                 </v-flex>
               </v-layout>
-              <v-layout column align-center justify-space-between>
+              <v-layout column py-5>
                 <v-flex xs12>
-                  <div class="citation_embed"> <iframe src="https://docs.google.com/document/d/e/2PACX-1vTryoeNY2EYzDL8ZCin6t_jYMe8W6OPVOLNzGTeQuDkQRXBEyNXz9ZHFmRZ7HlTkCOMrzsw9LUCgU8x/pub?embedded=true"></iframe> </div>
+                  <div class="citation_embed"><iframe src="https://docs.google.com/document/d/e/2PACX-1vTryoeNY2EYzDL8ZCin6t_jYMe8W6OPVOLNzGTeQuDkQRXBEyNXz9ZHFmRZ7HlTkCOMrzsw9LUCgU8x/pub?embedded=true"></iframe></div>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -260,6 +292,9 @@ import PieGraph from '@/components/PieGraph'
 import BarGraph from '@/components/BarGraph'
 
 import Citations from '@/assets/citations.txt'
+import Lagos from '@/assets/lagos.txt'
+import Comparison from '@/assets/comparison.txt'
+import Additional_Data from '@/assets/additional_data.txt'
 
 export default {
   name: "NigeriaDataView",
@@ -269,8 +304,8 @@ export default {
       // add immigration and emmigration rates
       population_size: '203,452,505',
       population_growth: 2.54,
-      immigration: 0,
-      emmigration: 0,
+      immigration_rates: [['Benin', '226,349'], ['Ghana', '176,493'], ['Mali', '126,631'], ['Togo', '109,862'], ['Niger', '83,047']],
+      emigration_rates: [['U.S', '252,172'], ['UK', '184,314'], ['Cameroon', '115,621'], ['Italy', '48,073'], ['Côte d\'Ivoire', '43,761']],
       immigration_rate: -0.2,
       age_pie_labels: ['0-14 Years', '15-24 Years', '25-54 Years', '55-64 Years', '65 Years and Older'],
       age_pie_data: [42.45, 19.81, 30.44, 4.04, 3.26],
@@ -327,7 +362,12 @@ export default {
       photo_e_src: require('@/assets/aso_rock.jpg'),
       photo_f_desc: 'Supreme Court Complex, Abuja - https://discoverafricanews.com',
       photo_f_src: require('@/assets/supreme_court_complex.jpg'),
+      photo_lagos_city_src: require('@/assets/lagos.png'),
+      photo_lagos_city_desc: 'Lagos City - Google Maps 2019',
       citation_string: Citations,
+      lagos_string: Lagos,
+      comparison_string: Comparison,
+      data_string: Additional_Data,
     }
   },
   components: {
@@ -341,11 +381,16 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-div {
+div,p {
   font-family: 'Oswald', sans-serif;
 }
-.citation_embed {
+
+p {
+  font-size: 120%;
+}
+
+.citation_embed iframe{
   width: 100%;
-  height: 100%;
+  height: 800px;
 }
 </style>

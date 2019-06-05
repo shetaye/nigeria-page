@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs5>
+  <v-flex>
       <div v-if="description_top" class="text-xs-center subheading">{{description_top}}</div>
       <div class="text-xs-center display-2">{{number}}</div>
       <div class="text-xs-center subheading">{{description}}</div>
